@@ -9,6 +9,7 @@ function ItineraryContent() {
   const searchParams = useSearchParams();
   const destination = searchParams.get("destination");
   const days = searchParams.get("days");
+  const budget = searchParams.get("budget");
   const specificActivities = searchParams.getAll("activities");
   
   const [itinerary, setItinerary] = useState<string | null>(null);
@@ -25,7 +26,8 @@ function ItineraryContent() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
             destination, 
-            days, 
+            days,
+            budget,
             activities: specificActivities 
           }),
         });
@@ -90,8 +92,8 @@ function ItineraryContent() {
         return <h1 key={index} className="text-4xl md:text-5xl text-rose-400 font-bold mb-8 italic text-center">{trimmed}</h1>;
       }
 
-      // Day / time headers
-      if (/^(day\s\d|morning|afternoon|evening)/i.test(trimmed)) {
+      // Day / time headers (support Day 1, Morning, Day 1: Morning, etc.)
+      if (/^(day\s\d|morning|afternoon|evening|pro tip|summary)/i.test(trimmed)) {
         return <h3 key={index} className="mt-12 mb-4 text-sky-900 font-bold text-2xl border-b-2 border-sky-100 pb-2">{trimmed}</h3>;
       }
 

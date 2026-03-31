@@ -73,30 +73,57 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid request." }, { status: 400 });
     }
 
-    const { destination: rawDest, days: rawDays, activities: rawActs } =
+    const { destination: rawDest, days: rawDays, budget: rawBudget, activities: rawActs } =
       body as Record<string, unknown>;
 
     // 3. Validate
     const destination = validateDestination(rawDest);
     const days = validateDays(rawDays);
+    const budget = typeof rawBudget === "string" ? rawBudget : "flexible";
     const activities = validateActivities(rawActs);
 
     // 4. Build prompt
     const activitiesClause =
       activities.length > 0
-        ? `IMPORTANT: You MUST include these specific activities: ${activities.join(", ")}.`
+        ? `The user is interested in these activities: ${activities.join(", ")}.`
         : "";
 
-    const prompt = `Act as an expert travel agent. Create a realistic, detailed day-by-day itinerary for a ${days}-day trip to ${destination}.
-${activitiesClause}
-CRITICAL: Begin the very first line by enthusiastically welcoming the user in the primary native language of ${destination} (e.g., "Bonjour!" for Paris). The rest MUST be in English.
-Format in simple plain text. DO NOT use asterisks, markdown, hashtags, or special symbols. Use hyphens (-) for bullet points. Include morning, afternoon, and evening activities. Suggest specific real places. Be helpful and professional.`;
+    const budgetClause = 
+      budget !== "flexible" 
+        ? `The total budget for this trip is approximately $${parseInt(budget).toLocaleString()}. Ensure all suggested accommodations and dining fit this budget.`
+        : "The budget is flexible.";
+
+    const prompt = `Act as a world-class travel consultant. Create a high-end, detailed day-by-day itinerary for a ${days}-day trip to ${destination}.
+    
+Context:
+- Destination: ${destination}
+- Duration: ${days} days
+- Budget: ${budgetClause}
+- Interests: ${activitiesClause}
+
+Formatting Rules (CRITICAL):
+1. Start the first line with a warm, enthusiastic greeting in the primary native language of ${destination}.
+2. Use ONLY simple plain text. No markdown, no bold (**), no hashtags, no asterisks (*).
+3. Use exact headers for days and times: "Day 1", "Day 2", "Morning", "Afternoon", "Evening".
+4. Use hyphens (-) for activity bullet points.
+5. Suggest specific, real-world locations (restaurants, parks, museums, hotels).
+6. Provide brief, engaging descriptions for each activity.
+
+Structure:
+- Greeting
+- Day 1
+  - Morning: [Activity]
+  - Afternoon: [Activity]
+  - Evening: [Activity]
+- Day 2
+  ... and so on.
+- Final "Summary" or "Pro Tip" section at the end.`;
 
     // 5. Call Groq
     const completion = await groq.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
-      model: "llama-3.1-8b-instant",
-      max_tokens: 2048,
+      model: "llama-3.3-70b-versatile",
+      max_tokens: 3000,
       temperature: 0.7,
     });
 

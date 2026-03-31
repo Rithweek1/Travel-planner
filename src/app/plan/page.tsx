@@ -73,7 +73,7 @@ function PlannerContent() {
   const handleSubmit = () => {
     setIsSubmitting(true);
     const finalDest = customDest || destination;
-    const qs = new URLSearchParams({ destination: finalDest, days });
+    const qs = new URLSearchParams({ destination: finalDest, days, budget });
     activities.forEach((a) => qs.append("activities", a));
     router.push(`/itinerary?${qs.toString()}`);
   };
