@@ -119,13 +119,24 @@ Structure:
   ... and so on.
 - Final "Summary" or "Pro Tip" section at the end.`;
 
-    // 5. Call Groq
-    const completion = await groq.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "llama-3.3-70b-versatile",
-      max_tokens: 3000,
-      temperature: 0.7,
-    });
+    // 5. Call Groq with Fallback
+    let completion;
+    try {
+      completion = await groq.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: "llama-3.1-70b-versatile",
+        max_tokens: 3000,
+        temperature: 0.7,
+      });
+    } catch (modelError) {
+      console.warn("[/api/plan] 70B model failed, falling back to 8B:", modelError);
+      completion = await groq.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: "llama-3.1-8b-instant",
+        max_tokens: 2048,
+        temperature: 0.7,
+      });
+    }
 
     const itinerary = completion.choices[0]?.message?.content ?? "";
     if (!itinerary) throw new Error("No itinerary was generated. Please try again.");
