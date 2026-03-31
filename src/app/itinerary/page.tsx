@@ -32,10 +32,24 @@ function ItineraryContent() {
           }),
         });
 
-        const data = await res.json();
+        const contentType = res.headers.get("content-type");
+        let data;
+        
+        if (contentType && contentType.includes("application/json")) {
+          data = await res.json();
+        } else {
+          // If the response is not JSON, it's likely an HTML error page (like a 403 Forbidden)
+          const text = await res.text();
+          console.error("Non-JSON response received:", text);
+          throw new Error(
+            res.status === 403 
+              ? "Access Forbidden (403). Please check your API keys and Vercel environment variables." 
+              : `Server error (${res.status}). Expected JSON but received ${contentType || 'unknown type'}.`
+          );
+        }
         
         if (!res.ok) {
-          throw new Error(data.error || "Failed to fetch itinerary. The AI model may be offline.");
+          throw new Error(data?.error || "Failed to fetch itinerary. The AI model may be offline.");
         }
 
         setItinerary(data.itinerary);

@@ -17,7 +17,7 @@ function requireEnv(key: string): string {
 }
 
 export const env = {
-  GROQ_API_KEY: requireEnv("GROQ_API_KEY"),
+  get GROQ_API_KEY() { return requireEnv("GROQ_API_KEY"); },
 
   // Upstash Redis (optional — enables persistent rate limiting across deploys)
   UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL ?? null,
@@ -28,6 +28,13 @@ export const env = {
   NEXTAUTH_URL: process.env.NEXTAUTH_URL ?? "http://localhost:3000",
 
   // Runtime
-  NODE_ENV: process.env.NODE_ENV ?? "development",
-  IS_PRODUCTION: process.env.NODE_ENV === "production",
+  get NODE_ENV() { return process.env.NODE_ENV ?? "development"; },
+  get IS_PRODUCTION() { return process.env.NODE_ENV === "production"; },
 };
+
+// Safe verification log for the user
+if (!env.IS_PRODUCTION) {
+  const keyMatch = env.GROQ_API_KEY.match(/^(gsk_[a-zA-Z0-9]{4}).*$/);
+  const displayKey = keyMatch ? `${keyMatch[1]}***` : "invalid_format";
+  console.log(`[Voyagr] Environment loaded. Groq Key: ${displayKey}`);
+}

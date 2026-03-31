@@ -46,9 +46,23 @@ function validateActivities(raw: unknown): string[] {
 // ── Route handler ──────────────────────────────────────────────────────────
 export async function POST(req: Request) {
   try {
+    // Inner try/catch can still be used for fine-grained errors
+    return await handleItineraryRequest(req);
+  } catch (outerError: any) {
+    console.error("[/api/plan] FATAL:", outerError);
+    return NextResponse.json(
+      { error: "A server error occurred. Please check your environment variables and logs." },
+      { status: 500 }
+    );
+  }
+}
+
+async function handleItineraryRequest(req: Request) {
+  try {
     // 1. Rate limiting (in-memory dev / Redis production)
     const forwarded = req.headers.get("x-forwarded-for");
     const ip = forwarded ? forwarded.split(",")[0].trim() : "anonymous";
+    // ... rest of the logic remains same
 
     const { success, remaining } = await checkRateLimit(ip);
     if (!success) {

@@ -1,0 +1,168 @@
+﻿
+> my-travel-planner@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.1 (Turbopack)
+- Environments: .env.local
+
+node.exe : ΓÜá The 
+"middleware" file 
+convention is deprecated. 
+Please use "proxy" 
+instead. Learn more: https
+://nextjs.org/docs/message
+s/middleware-to-proxy
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (Γ  
+  Üá The "middle...lewa   
+ re-to-proxy:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+  Creating an optimized production build ...
+Turbopack build 
+encountered 2 warnings:
+./src/lib/ratelimit.ts:40:
+33
+Module not found: Can't 
+resolve 
+'@upstash/ratelimit'
+  [90m38 |[0m   
+[36mtry[0m {
+  [90m39 |[0m     
+[90m// Dynamic import so 
+the app still starts if 
+this package isn't 
+installed yet[0m
+[31m[1m>[0m [90m40 
+|[0m     [36mconst[0m 
+{ [33mRatelimit[0m } = 
+[36mawait[0m [36mimport
+[0m([32m"@upstash/rateli
+mit"[0m);
+  [90m   |[0m           
+                      [31
+m[1m^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^[0m
+  [90m41 |[0m     
+[36mconst[0m { 
+[33mRedis[0m } = 
+[36mawait[0m [36mimport
+[0m([32m"@upstash/redis"
+[0m);
+  [90m42 |[0m
+  [90m43 |[0m     
+[36mconst[0m redis = 
+[36mnew[0m 
+[33mRedis[0m({
+
+
+
+Import trace:
+  App Route:
+    ./src/lib/ratelimit.ts
+    ./src/app/api/plan/rou
+te.ts
+
+https://nextjs.org/docs/me
+ssages/module-not-found
+
+
+./src/lib/ratelimit.ts:41:
+29
+Module not found: Can't 
+resolve '@upstash/redis'
+  [90m39 |[0m     
+[90m// Dynamic import so 
+the app still starts if 
+this package isn't 
+installed yet[0m
+  [90m40 |[0m     
+[36mconst[0m { 
+[33mRatelimit[0m } = 
+[36mawait[0m [36mimport
+[0m([32m"@upstash/rateli
+mit"[0m);
+[31m[1m>[0m [90m41 
+|[0m     [36mconst[0m 
+{ [33mRedis[0m } = 
+[36mawait[0m [36mimport
+[0m([32m"@upstash/redis"
+[0m);
+  [90m   |[0m           
+                  [31m[1
+m^^^^^^^^^^^^^^^^^^^^^^^^
+[0m
+  [90m42 |[0m
+  [90m43 |[0m     
+[36mconst[0m redis = 
+[36mnew[0m 
+[33mRedis[0m({
+  [90m44 |[0m       
+url: process.env.[33mUPST
+ASH_REDIS_REST_URL[0m!,
+
+
+
+Import trace:
+  App Route:
+    ./src/lib/ratelimit.ts
+    ./src/app/api/plan/rou
+te.ts
+
+https://nextjs.org/docs/me
+ssages/module-not-found
+
+
+Γ£ô Compiled successfully in 3.8s
+  Running TypeScript ...
+Failed to type check.
+
+./src/lib/ratelimit.ts:40:
+40
+Type error: Cannot find 
+module 
+'@upstash/ratelimit' or 
+its corresponding type 
+declarations.
+
+  [90m38 |[0m   
+[36mtry[0m {
+  [90m39 |[0m     
+[90m// Dynamic import so 
+the app still starts if 
+this package isn't 
+installed yet[0m
+[31m[1m>[0m [90m40 
+|[0m     [36mconst[0m 
+{ [33mRatelimit[0m } = 
+[36mawait[0m [36mimport
+[0m([32m"@upstash/rateli
+mit"[0m);
+  [90m   |[0m           
+                          
+   [31m[1m^[0m
+  [90m41 |[0m     
+[36mconst[0m { 
+[33mRedis[0m } = 
+[36mawait[0m [36mimport
+[0m([32m"@upstash/redis"
+[0m);
+  [90m42 |[0m
+  [90m43 |[0m     
+[36mconst[0m redis = 
+[36mnew[0m 
+[33mRedis[0m({
+Next.js build worker 
+exited with code: 1 and 
+signal: null
