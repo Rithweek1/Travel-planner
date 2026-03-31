@@ -45,9 +45,17 @@ export function middleware(req: NextRequest) {
   // ── 3. CSRF: check Origin on mutating API requests ───────────────────────
   if (pathname.startsWith("/api/") && req.method !== "GET") {
     const requestOrigin = req.headers.get("origin");
+    const host = req.headers.get("host");
     
-    // In production: enforce strict origin check
-    if (isProduction && requestOrigin && !ALLOWED_ORIGINS.includes(requestOrigin)) {
+    // In production: allow the request if the origin matches the current host
+    // or if it's a trusted local/preview origin.
+    const isAllowedOrigin = 
+      !requestOrigin || 
+      ALLOWED_ORIGINS.includes(requestOrigin) ||
+      (host && requestOrigin.includes(host));
+
+    if (isProduction && !isAllowedOrigin) {
+      console.warn(`[Middleware] Blocked request from unauthorized origin: ${requestOrigin}`);
       return new NextResponse("Forbidden: Invalid origin", { status: 403 });
     }
   }

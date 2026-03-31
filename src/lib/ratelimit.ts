@@ -65,10 +65,8 @@ async function redisCheck(ip: string): Promise<{ success: boolean; remaining: nu
 export async function checkRateLimit(
   ip: string
 ): Promise<{ success: boolean; remaining: number }> {
-  // TEMPORARY FIX: Force in-memory check to bypass Vercel/Upstash 403 Forbidden issues
-  // const hasRedis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN;
-  // return hasRedis ? redisCheck(ip) : inMemoryCheck(ip);
-  
-  console.log("[Voyagr] Using in-memory rate limit fallback for diagnosis");
-  return inMemoryCheck(ip);
+  const hasRedis = 
+    process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  return hasRedis ? redisCheck(ip) : inMemoryCheck(ip);
 }
